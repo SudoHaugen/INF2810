@@ -1,0 +1,150 @@
+(load "prekode3a.scm")
+
+;; OBLIG 3a
+
+; Oppgave 1 a + b
+
+(define (mem2 proc)
+  (let ((mem-table (make-table)))
+    (lambda k
+      (let ((prev-result (lookup k mem-table)))
+        (or prev-result
+            (let ((result (apply proc k)))
+              (insert! k result mem-table)
+              result))))))
+
+(define proc-records (make-table))
+
+(define (mem message proc)
+  (cond
+    ((equal? 'unmemoize message)
+     (display "Unmemoziing...") (newline)
+     (or (lookup proc proc-records)
+         proc))
+    
+    ((equal? 'memoize message)
+     (let ((old proc)
+           (new (mem2 proc)))
+       (display "Memoziing...") (newline)
+       (insert! new old proc-records)
+       new))
+    (else (display "Error"))))
+
+
+(set! fib (mem 'memoize fib))
+
+(fib 1)
+(fib 2)
+(fib 3)
+(fib 4)
+(fib 5)
+(fib 6)
+(fib 7)
+(fib 8)
+
+(set! fib (mem2 'unmemoize fib))
+
+(fib 2)
+
+(test-proc)
+
+(test-proc 1 2 3 4)
+
+
+; Oppgave 1 c
+
+
+;Det som skjer her er at programmet bare memoiserer kallet på prosedyren, men ikke kalkuleringene som blir gjort.
+
+
+
+; Oppgave 1 d
+
+
+(define (greet . args)
+  (define output-string (list "good" "day" "friend"))
+  (define (main-body args)
+    (cond
+      ((null? args) (display (car output-string)) (display " ") (display (cadr output-string)) (display " ") (display (caddr output-string)) (display "\n"))
+      ((equal? (car args) 'time) (set-car! (cdr output-string) (cadr args)))
+      ((equal? (car args) 'title) (set-car! (cddr output-string) (cadr args)))
+      (else (display "Wrong input")))
+    (if (not (null? args))
+        (main-body (cddr args))))
+  (main-body args))
+
+(greet)
+(greet 'time "evening")
+(greet 'title "mister")
+(greet 'time "morning" 'title "sir")
+
+
+
+;; OPPGAVE 2 - STRØMMER
+;; a)
+
+;; GJØRE OM EN STRØM TIL EN LISTE
+(define (stream-to-list stream . antall)
+  (if (stream-null? stream) ;; Hvis strømmen er tom, returner en tom liste
+      '()
+      (cond ((null? antall)
+             (cons (stream-car stream) ;; Hvis det ikke er gitt et spesifikt antall, conse første element i strømmen med resten av strømmen osv.
+                   (stream-to-list (stream-cdr stream))))
+            ((> (car antall) 1)
+             (cons (stream-car stream) ;; Hvis det er gitt et spesifikt antall, conse første element i strømmen med resten av strømmen og ta antall-1
+                   (stream-to-list (stream-cdr stream) (- (car antall) 1))))
+            ((= (car antall) 1)        ;; Hit kommer den når den er på det siste elementet som skal conses til lista, og den conser da med et "'()" element
+             (cons (stream-car stream) '())))))
+
+
+;; GJØRE OM EN LISTE TIL EN STRØM
+(define (list-to-stream liste)
+  (cond ((null? liste)   ;; Hvis lista er tom originalt, returnes en tom strøm
+         the-empty-stream)
+        ((null? (cdr liste))  ;; Hvis neste element er slutten av lista, sett inn siste element i strømmen
+         (cons-stream (car liste)
+                      (cdr liste)))
+        (else (cons-stream (car liste)  ;; Hvis lista ikke blir tom, sett inn element i strøm og hopp videre i lista
+                           (list-to-stream (cdr liste))))))
+
+
+
+;; b)
+;; Denne fungerer med strømmer med lik lengde
+
+(define (stream-map proc . argstreams) ;; tar inn prosedyren og strømmene
+  (if (stream-null? (car argstreams)) ;; Hvis listen med strømmer er tom, returneres bare en tom liste
+      the-empty-stream
+      (cons-stream   ;; Hvis ikke skal strømmene conses sammen til en strøm
+       (apply proc (map stream-car argstreams)) ;; Her hentes det ut første verdi i hver av strømmene og setter de i en egen strøm, og anvender prosedyren på de
+       (apply stream-map    ;; Så konses svaret fra første verdi, med samme prosedyre på neste verdi i strømmene
+              (cons proc (map stream-cdr argstreams))))))  ;; proc blir første element (før punktum) mens cdr av alle strømmene blir neste
+
+
+;; c)
+;; Et problem vil være når den sjekker om symbolet er medlem av resten av strømmen. Den vil kun sjekke om den er lik cdr, ikke alle
+;; verdiene i resten av listen da disse ikke er kalkulert enda.
+
+
+;; d)
+
+(define (remove-duplicates stream)
+  (if (stream-null? stream)
+      the-empty-stream
+      (cons-stream (stream-car stream)
+                   (remove-duplicates (stream-filter (lambda (x) (not (equal? (stream-car stream) x))) stream)))))
+
+;; For å teste:
+;; (define s1 (list-to-stream '(1 2 3 3 4 4 5)))
+;; (show-stream (remove-duplicates s1))
+
+
+;; e)
+
+
+
+
+
+
+
+

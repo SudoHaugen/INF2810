@@ -1,0 +1,88 @@
+; Oppgave 1
+
+
+; f)
+
+(define bar "Hello") ;Måtte gi bar en definisjon for at den skulle kjøre i replet
+
+(car (cdr (list 0 42 #t bar)))
+
+
+; g)  (Spør om denne er lovlig av en gruppelærer)
+
+
+(cdr (car '((0 42) (#t bar))))
+
+
+; h) (Husk å forandre denne hvis oppgave g er ugyldig)
+
+(car (car (cdr '((0) (42 #t) (bar)))))
+
+; i)
+
+; Ved bruk av bare cons:
+
+(cons (cons 0 42)
+      (cons #t bar))
+
+; ved bare bruk av list?
+
+'((0 42) (#t bar))
+
+
+; Oppgave 2
+
+
+; a)
+
+
+(define (length2 items)
+  (define (length_count items y)
+    (if (null? items)
+        y
+        (length_count (cdr items)
+                      (+ y 1))))
+  (length_count items 0))
+
+
+
+; b)
+
+
+; Den eneste måten jeg fikk prosedyren til å virke var å lage en en hjelpe prosedyre som bruker halerekursjon
+; Dette ga opphav til en iterativ prosess ettersom den bare returnerer akkumulatorvariblen når den har nådd basistilfellet
+
+(define (reduce-reverse proc init items)
+  (define (reverse in out)
+    (if (null? in)
+        out
+        (reverse (cdr in)
+                 (cons (car in) out))))
+  (reverse items init))
+
+
+; c)
+
+(define (all? proc items)
+  (if #f (proc (car items)))
+      #f
+      (proc (car (cdr items))))
+
+
+         
+  
+         
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+

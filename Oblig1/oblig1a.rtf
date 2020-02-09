@@ -1,0 +1,52 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww28600\viewh18000\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+\
+//To prosedyrer som legger til 1 og trekker fra 1 (oppgave 1)\
+\
+(define add1\
+  (lambda (n)\
+    (+ n 1)))\
+\
+(define sub1\
+  (lambda (n)\
+    (- n 1)))\
+\
+\
+//Oppgave 2: Lag en rekursiv prosedyre, plus som tar to argumenter og bruker prosedyrene add1 og sub1 til \'e5 legge de sammen.\
+//Forklar om prosessen er rekursiv eller iterativ og pr\'f8v \'e5 lage den andre versjonen \
+\
+//F\'f8rste rekursive prosedyren jeg lagde \
+\
+(define plus\
+  (lambda (n x)\
+    (if (zero? x)\
+        n\
+        (plus (add1 n) (sub1 x)))))\
+\
+(plus 5 4)\
+\
+\
+//Rekursiv prosedyre med iterativ prosess\
+\
+(define plus\
+  (lambda (n x)\
+   (define (iter prod count)\
+     (if (zero? count)\
+         prod\
+         (iter (add1 prod)\
+               (sub1 count))))\
+    (iter n x)))\
+\
+\
+//Er det riktig at den f\'f8rste er rekursiv prosess ettersom plus() kaller p\'e5 seg selv? Jeg har litt problemer med \'e5 se hvordan den iterative prosessen jobber forskjellig fra den rekursive. \
+\
+\
+\
+\
+}

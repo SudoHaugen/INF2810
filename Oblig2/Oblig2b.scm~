@@ -1,0 +1,102 @@
+;Oblig 2B
+
+
+; Oppgave 1
+
+
+; a)
+
+(define count 42)
+
+(define make-counter
+  (lambda ()
+    (let ((count 0))
+      (lambda ()
+        (set! count (+ count 1))
+        count))))
+
+(define c1 (make-counter))
+(define c2 (make-counter))
+
+
+
+;Oppgave 2
+
+
+; a)
+
+
+(define make-stack
+  (lambda (liste)
+    (define (pop!)
+      (if (null? (car (liste)))
+          "Error: List is null"
+          (let ((element (car liste)))
+            (set-car! liste (cdar liste))
+            element)))
+    (define push!
+      (lambda (new-list)
+        (define (append! x y)
+
+
+
+(define (append! x y)
+  (if (null? (cdr x))
+      (set-cdr! x y)
+      (append! (cdr x) y)))
+
+(define (append! x y)
+
+
+
+  (define (append! x y)
+    (if (null? (cdr y))
+        (set-cdr! (car y) x) ;; Setter siste element foran på eksisterende liste
+        (append! (set-cdr! (car y) x) (cdr y))))
+
+  (define l1 '(1 2))
+  (define l2 '(3 4))
+  (append! l1 l2)
+
+
+  (define li '(1 2))
+  (define (remove-list liste)
+    (set! liste (cdr liste))
+    liste)
+  
+
+
+
+  (define (make-stack liste)
+    (define (pop! liste)
+      (set! liste (cdr liste)) liste)
+    (define (push! new-list-item)
+      (append liste (new-list-item)) liste)
+
+
+    (define liste '(1 2 3))
+
+    (append liste '(4 5 6))
+
+    (liste)
+
+    (define (pop! new-item)
+      (set! liste (set-car! new-item)) liste)
+    
+  
+(define (s1 liste)
+  (set! liste (cdr liste)) liste)
+
+
+(define (make-list lister)
+  
+  (define (pop!)
+      (set! lister (cdr lister))
+    lister)
+  
+  (define (dispatch input)
+    (cond ((eq? input 'pop!) pop!)))
+  dispatch)
+
+
+  
